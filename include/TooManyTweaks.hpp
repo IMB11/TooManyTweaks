@@ -39,6 +39,8 @@ namespace TooManyTweaks {
 
     class Tweak {
     public:
+        ~Tweak() = default;
+
         virtual TweakCategory getCategory() = 0;
         virtual ConfigValue getConfigValue() = 0;
         virtual void installHooks() = 0;
@@ -48,24 +50,24 @@ namespace TooManyTweaks {
 
     class Tweaks {
     private:
-        inline static std::vector<Tweak> registeredTweaks;
+        inline static std::vector<Tweak*> registeredTweaks;
     public:
 
         template<typename T, typename = std::enable_if<std::is_base_of<Tweak, T>::value>>
         static void Add(const T& tweak) {
-            registeredTweaks.push_back(tweak);
+            registeredTweaks.push_back(*tweak);
         }
 
         static void InstallHooks(Logger &logger) {
             for (auto &item: registeredTweaks) {
-                item.installHooks();
+                item->installHooks();
             }
         }
 
-        static std::vector<Tweak> getAllInCategory(TweakCategory category) {
-            std::vector<Tweak> _;
-            std::copy_if (registeredTweaks.begin(), registeredTweaks.end(), std::back_inserter(_), [&category](Tweak &tweak) {
-                return tweak.getCategory() == category;
+        static std::vector<Tweak*> getAllInCategory(TweakCategory category) {
+            std::vector<Tweak*> _;
+            std::copy_if (registeredTweaks.begin(), registeredTweaks.end(), std::back_inserter(_), [&category](Tweak *tweak) {
+                return tweak->getCategory() == category;
             });
             return _;
         }
