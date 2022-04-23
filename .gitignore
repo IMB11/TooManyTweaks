@@ -62,3 +62,5 @@ qpm_defines.cmake
 [Bb]uild/
 cmake-build-*/
 extern.cmake
+/tombstone_01
+/tombstone_02
