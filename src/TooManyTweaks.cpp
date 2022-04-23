@@ -1,20 +1,37 @@
-#include "TooManyTweaks.hpp"// Stores the ID and version of our mod, and is sent to the modloader upon startup
+#include "TooManyTweaks.hpp"
+#include "UI/CoreFlowCoordinator.hpp"
 
-// Called at the early stages of game loading
+DEFINE_CONFIG(TMTConfig)
+
+Configuration& getConfig()  {
+    static Configuration config(modInfo);
+    config.Load();
+    return config;
+};
+
+Logger& getLogger()  {
+    static Logger* logger = new Logger(modInfo);
+    return *logger;
+}
+
 extern "C" void setup(ModInfo& info) {
     info.id = ID;
     info.version = VERSION;
     modInfo = info;
 	
-    getConfig().Load(); // Load the config file
+    getConfig().Load();
     getLogger().info("Completed setup!");
 }
 
-// Called later on in the game loading - a good time to install function hooks
 extern "C" void load() {
     il2cpp_functions::Init();
+
+    getTMTConfig().Init(modInfo);
 
     getLogger().info("Installing hooks...");
     TooManyTweaks::Tweaks::InstallHooks(getLogger());
     getLogger().info("Installed all hooks!");
+
+    QuestUI::Register::RegisterMainMenuModSettingsFlowCoordinator<TooManyTweaks::CoreFlowCoordinator*>(modInfo);
+    QuestUI::Register::RegisterModSettingsFlowCoordinator<TooManyTweaks::CoreFlowCoordinator*>(modInfo);
 }

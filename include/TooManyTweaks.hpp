@@ -10,32 +10,30 @@
 #include "config-utils/shared/config-utils.hpp"
 #include "custom-types/shared/macros.hpp"
 
+#include "questui/shared/QuestUI.hpp"
+
+#include "enum.h"
+
+#include "TooManyTweaksConfig.hpp"
+
 static ModInfo modInfo;
 
-Configuration& getConfig() {
-    static Configuration config(modInfo);
-    config.Load();
-    return config;
-}
+Configuration& getConfig();
 
 // Returns a logger, useful for printing debug messages
-Logger& getLogger() {
-    static Logger* logger = new Logger(modInfo);
-    return *logger;
-}
+Logger& getLogger();
 
 template <class Type, class BaseClass>
 concept CheckType = std::is_base_of<BaseClass, Type>::value;
 
-
 namespace TooManyTweaks {
 
-    enum TweakCategory {
-        CONTROLLER,
-        UI,
-        GAMEPLAY,
-        MISC
-    };
+    BETTER_ENUM(TweakCategory, char,
+                Controller,
+                UI,
+                Gameplay,
+                Miscellaneous
+    )
 
     class Tweak {
     public:

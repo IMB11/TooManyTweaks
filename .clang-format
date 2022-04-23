@@ -1,0 +1,7 @@
+BasedOnStyle: LLVM
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: true
+Cpp11BracedListStyle: true
+IndentWidth: 4
+NamespaceIndentation: All
