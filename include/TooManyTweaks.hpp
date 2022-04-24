@@ -27,53 +27,6 @@ template <class Type, class BaseClass>
 concept CheckType = std::is_base_of<BaseClass, Type>::value;
 
 namespace TooManyTweaks {
-
-    BETTER_ENUM(TweakCategory, char,
-                Controller,
-                UI,
-                Gameplay,
-                Miscellaneous
-    )
-
-    class Tweak {
-    public:
-        ~Tweak() = default;
-
-        virtual TweakCategory getCategory() = 0;
-        virtual ConfigValue getConfigValue() = 0;
-        virtual void installHooks() = 0;
-    };
-
-
-
-    class Tweaks {
-    private:
-        inline static std::vector<Tweak*> registeredTweaks;
-    public:
-
-        template<typename T, typename = std::enable_if<std::is_base_of<Tweak, T>::value>>
-        static void Add(const T& tweak) {
-            registeredTweaks.push_back(*tweak);
-        }
-
-        static void InstallHooks(Logger &logger) {
-            for (auto &item: registeredTweaks) {
-                item->installHooks();
-            }
-        }
-
-        static std::vector<Tweak*> getAllInCategory(TweakCategory category) {
-            std::vector<Tweak*> _;
-            std::copy_if (registeredTweaks.begin(), registeredTweaks.end(), std::back_inserter(_), [&category](Tweak *tweak) {
-                return tweak->getCategory() == category;
-            });
-            return _;
-        }
-    };
-
-    /*
-     * Legacy, should be used for anything that ISN'T a tweak.
-     */
     class Hooks {
     private:
         inline static std::vector<void (*)(Logger &logger)> installFuncs;
@@ -91,13 +44,7 @@ namespace TooManyTweaks {
     };
 } // namespace ManyTweaks
 
-#define DeclareTweak(tweak, ca) \
-    struct __ManyTweaksDeclare#tweak {                                          \
-        __ManyTweaksDeclare##tweak() { TooManyTweaks::Tweaks::Add() }  \
-    };                                                                         \
-    static __ManyTweaksDeclare##tweak __ManyTweaksDeclareInstance##tweak;
-
-#define RegisterMTHook(func)                                             \
+#define RegisterMTHooks(func)                                             \
     struct __ManyTweaksRegister##func {                                          \
         __ManyTweaksRegister##func() { TooManyTweaks::Hooks::AddInstallFunc(func); }  \
     };                                                                         \

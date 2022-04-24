@@ -1,4 +1,6 @@
 #include "UI/CoreFlowCoordinator.hpp"
+#include "UI/SecondaryScreens/InformationLeftViewController.hpp"
+#include "UI/SecondaryScreens/ControllerTabRightViewController.hpp"
 
 #include "HMUI/ViewController.hpp"
 #include "HMUI/ViewController_AnimationType.hpp"
@@ -16,9 +18,11 @@ namespace TooManyTweaks {
             SetTitle("TooManyTweaks", ViewController::AnimationType::Out);
             showBackButton = true;
 
-            centerView = QuestUI::BeatSaberUI::CreateViewController<CenterViewController*>();
+            centerView = QuestUI::BeatSaberUI::CreateViewController<CenterViewController *>();
 
-            ProvideInitialViewControllers(centerView, nullptr, nullptr, nullptr, nullptr);
+            reinterpret_cast<TooManyTweaks::CenterViewController*>(centerView)->parentFlowCoordinator = this;
+
+            ProvideInitialViewControllers(centerView, QuestUI::BeatSaberUI::CreateViewController<InformationLeftViewController*>(), QuestUI::BeatSaberUI::CreateViewController<ControllerTabRightViewController*>(), nullptr, nullptr);
         }
     }
 

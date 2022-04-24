@@ -29,7 +29,7 @@ extern "C" void load() {
     getTMTConfig().Init(modInfo);
 
     getLogger().info("Installing hooks...");
-    TooManyTweaks::Tweaks::InstallHooks(getLogger());
+    TooManyTweaks::Hooks::InstallHooks(getLogger());
     getLogger().info("Installed all hooks!");
 
     QuestUI::Register::RegisterMainMenuModSettingsFlowCoordinator<TooManyTweaks::CoreFlowCoordinator*>(modInfo);
