@@ -70,9 +70,6 @@ namespace TooManyTweaks {
             }
 
             #pragma endregion
-
-
-//            SwitchGameplayTab(0);
         }
     }
 
