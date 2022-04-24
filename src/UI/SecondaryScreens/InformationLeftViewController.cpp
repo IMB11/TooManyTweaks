@@ -1,35 +1,14 @@
 #include "UI/SecondaryScreens/InformationLeftViewController.hpp"
 
 #include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
+#include "UnityEngine/RectOffset.hpp"
+#include "UnityEngine/Application.hpp"
+
+#include "UI/Components/Shimmer.hpp"
 
 DEFINE_TYPE(TooManyTweaks, InformationLeftViewController);
 
 namespace TooManyTweaks {
-    GameObject* CreateChangelogLayout(UnityEngine::Transform* parent, std::string text) {
-        using namespace QuestUI;
-        using namespace UnityEngine;
-        using namespace HMUI;
-        using namespace UnityEngine::UI;
-
-        auto horizon = BeatSaberUI::CreateHorizontalLayoutGroup(parent);
-        auto layout = BeatSaberUI::CreateVerticalLayoutGroup(horizon->get_transform());
-
-        auto tmproText = BeatSaberUI::CreateText(layout->get_transform(), text, false);
-        tmproText->set_fontSize(tmproText->get_fontSize() * 0.65f);
-        tmproText->set_alignment(TMPro::TextAlignmentOptions::_get_MidlineLeft());
-        tmproText->set_enableWordWrapping(true);
-
-        auto clayout = tmproText->get_gameObject()->AddComponent<LayoutElement*>();
-        layout->set_childControlHeight(true);
-        layout->set_childForceExpandHeight(true);
-        layout->set_childControlWidth(true);
-        layout->set_childForceExpandWidth(true);
-        horizon->set_childControlWidth(true);
-        horizon->set_childForceExpandWidth(true);
-        clayout->set_preferredWidth(80.f);
-
-        return horizon->get_gameObject();
-    }
 
     void InformationLeftViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling) {
         using namespace QuestUI;
@@ -40,21 +19,28 @@ namespace TooManyTweaks {
         if(firstActivation) {
             auto scrollView = BeatSaberUI::CreateScrollView(get_transform());
 
-            auto title = BeatSaberUI::CreateText(scrollView->get_transform(), "<size=140%>Changelog</size>");
+            auto title = BeatSaberUI::CreateText(scrollView->get_transform(), "<size=140%>Premium</size>");
             title->set_alignment(TMPro::TextAlignmentOptions::Center);
 
-            auto changelog = "<size=120%>1.0.0</size>\n"
-                             "The initial release of TooManyTweaks, there may be some minor bugs, so please help out and report them at the GitHub repo or on discord.\n"
-                             "<size=110%>Added Tweaks</size>\n"
-                             "<size=105%>Controller Tweaks</size>\n"
-                             "- Custom Rumble Intensities\n"
-                             "<size=95%>- Cut Rumble Strength\n"
-                             "- Chain Rumble Strength\n"
-                             "- Arc Rumble Strength</size>\n";
+            auto titleShimmer = title->get_gameObject()->AddComponent<Shimmer*>();
+            titleShimmer->startColor = Color(245.0f / 255.0f, 115.0f / 255.0f, 34.0f / 255.0f, 1.0f);
+            titleShimmer->endColor = Color(15.0f / 255.0f, 205.0f / 255.0f, 212.0f / 255.0f, 1.0f);
 
-            auto pLayoutGroup = BeatSaberUI::CreateVerticalLayoutGroup(scrollView->get_transform());
-            pLayoutGroup->get_gameObject()->AddComponent<Backgroundable*>()->ApplyBackgroundWithAlpha("round-rect-panel", 0.5f);
-            CreateChangelogLayout(pLayoutGroup->get_transform(), changelog);
+            HorizontalLayoutGroup *horizontalLayoutGroup =
+                    QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(
+                            scrollView->get_transform());
+            horizontalLayoutGroup->set_padding(RectOffset::New_ctor(0, 0, -5, 5));
+
+
+
+            BeatSaberUI::CreateText(horizontalLayoutGroup->get_transform(),
+                                    "TooManyTweaks (ARR) cal117", Vector2::get_zero(),
+                                    Vector2(4, 4));
+            Button *donateButton = BeatSaberUI::CreateUIButton(
+                    horizontalLayoutGroup->get_transform(), "More by cal117",
+                    []() { Application::OpenURL("https://cal117.itch.io/"); });
+            BeatSaberUI::SetButtonTextSize(donateButton, 3);
+
         }
     }
 }
