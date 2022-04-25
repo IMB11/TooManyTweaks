@@ -13,7 +13,7 @@ DECLARE_CLASS_CODEGEN(TooManyTweaks, CenterViewController, HMUI::ViewController,
     DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, controllerTab);
     DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, gameplayTab);
     DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, uiTab);
-    DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, miscTab);
+//    DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, miscTab);
 public:
     std::vector<std::function<void(bool)>> onControllerTabRumbleStateChange;
 )

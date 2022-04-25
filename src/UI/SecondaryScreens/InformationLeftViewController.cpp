@@ -19,8 +19,17 @@ namespace TooManyTweaks {
         if(firstActivation) {
             auto scrollView = BeatSaberUI::CreateScrollView(get_transform());
 
-            auto title = BeatSaberUI::CreateText(scrollView->get_transform(), "<size=140%>Premium</size>");
+            auto title = BeatSaberUI::CreateText(scrollView->get_transform(), "<size=140%>Patreon</size>\n");
             title->set_alignment(TMPro::TextAlignmentOptions::Center);
+
+            HorizontalLayoutGroup *ptrg =
+                    QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(
+                            BeatSaberUI::CreateVerticalLayoutGroup(scrollView->get_transform()));
+
+            auto subtitle = BeatSaberUI::CreateText(ptrg->get_transform(), "Join my patreon to get access to early builds of upcoming mods and mods that I dont publish to BSMG.\nYou can also gain access to a secret part of my discord where you can chat and stay up to date.");
+            subtitle->set_alignment(TMPro::TextAlignmentOptions::Center);
+
+// TODO: Patreon list
 
             auto titleShimmer = title->get_gameObject()->AddComponent<Shimmer*>();
             titleShimmer->startColor = Color(245.0f / 255.0f, 115.0f / 255.0f, 34.0f / 255.0f, 1.0f);
@@ -29,12 +38,9 @@ namespace TooManyTweaks {
             HorizontalLayoutGroup *horizontalLayoutGroup =
                     QuestUI::BeatSaberUI::CreateHorizontalLayoutGroup(
                             scrollView->get_transform());
-            horizontalLayoutGroup->set_padding(RectOffset::New_ctor(0, 0, -5, 5));
-
-
 
             BeatSaberUI::CreateText(horizontalLayoutGroup->get_transform(),
-                                    "TooManyTweaks (ARR) cal117", Vector2::get_zero(),
+                                    "TMT (ARR) cal117", Vector2::get_zero(),
                                     Vector2(4, 4));
             Button *donateButton = BeatSaberUI::CreateUIButton(
                     horizontalLayoutGroup->get_transform(), "More by cal117",

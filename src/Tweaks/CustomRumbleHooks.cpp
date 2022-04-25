@@ -63,6 +63,7 @@ MAKE_HOOK_MATCH(ArcRumbleHook, &SliderHapticFeedbackInteractionEffect::Vibrate, 
 
 void InstallRumbleHooks(Logger& logger) {
     INSTALL_HOOK(logger, CutRumbleHook);
+    INSTALL_HOOK(logger, ArcRumbleHook);
 }
 
 RegisterMTHooks(InstallRumbleHooks)
