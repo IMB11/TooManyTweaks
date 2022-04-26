@@ -134,6 +134,11 @@ namespace TooManyTweaks {
 
             auto _uiTab = BeatSaberUI::CreateScrollableSettingsContainer(get_transform());
 
+            auto noComboBreak = AddConfigValueToggle(_uiTab->get_transform(), getTMTConfig().noComboBreakEffect);
+            auto noHealthLOL = AddConfigValueToggle(_uiTab->get_transform(), getTMTConfig().noHealthAndSafety);
+
+            BeatSaberUI::AddHoverHint(noComboBreak->get_gameObject(), "Removes the annoying combo break effect that can distract some players.");
+            BeatSaberUI::AddHoverHint(noHealthLOL->get_gameObject(), "Removes the health and safety warnings at the start of the game.");
 
             uiTab = AdjustedScrollContainerObject(_uiTab, false);
 #pragma endregion

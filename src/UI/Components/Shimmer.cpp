@@ -22,7 +22,7 @@ custom_types::Helpers::Coroutine TooManyTweaks::Shimmer::cycle(Color startColor,
 
 void TooManyTweaks::Shimmer::Awake() {
     text = GetComponent<TMPro::TextMeshProUGUI*>();
-    time = 3;
+    time = 1.5f;
     forwards = true;
     isCycling = false;
 }
