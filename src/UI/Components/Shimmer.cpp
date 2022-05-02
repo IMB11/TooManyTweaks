@@ -21,15 +21,14 @@ custom_types::Helpers::Coroutine TooManyTweaks::Shimmer::cycle(Color startColor,
 }
 
 void TooManyTweaks::Shimmer::Awake() {
-    text = GetComponent<TMPro::TextMeshProUGUI*>();
+    text = GetComponent<TMPro::TextMeshProUGUI *>();
     time = 1.5f;
     forwards = true;
     isCycling = false;
 }
 
 void TooManyTweaks::Shimmer::Update() {
-    if (!isCycling)
-    {
+    if (!isCycling) {
         if (forwards)
             StartCoroutine(custom_types::Helpers::CoroutineHelper::New(cycle(startColor, endColor, time)));
         else

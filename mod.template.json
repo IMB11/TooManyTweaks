@@ -1,7 +1,7 @@
 {
 	"_QPVersion": "0.1.1",
-	"name": "${name}",
-	"id": "${id}",
+	"name": "TooManyTweaks",
+	"id": "toomanytweaks",
 	"author": "cal117",
 	"version": "${version}",
 	"packageId": "com.beatgames.beatsaber",

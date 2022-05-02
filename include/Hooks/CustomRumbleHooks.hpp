@@ -19,7 +19,7 @@ static const float DURATION_WEAK = 0.07f;
 static const float ARC_STRENGTH_NORMAL = 0.75f;
 static const float ARC_DURATION_NORMAL = 0.01f;
 
-static HapticPresetSO* normalPreset;
-static HapticPresetSO* weakPreset;
-static HapticPresetSO* arcPreset;
+static HapticPresetSO *normalPreset;
+static HapticPresetSO *weakPreset;
+static HapticPresetSO *arcPreset;
 

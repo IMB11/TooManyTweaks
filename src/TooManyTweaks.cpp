@@ -18,7 +18,7 @@ extern "C" void setup(ModInfo& info) {
     info.id = ID;
     info.version = VERSION;
     modInfo = info;
-	
+
     getConfig().Load();
     getLogger().info("Completed setup!");
 }
@@ -32,6 +32,7 @@ extern "C" void load() {
     TooManyTweaks::Hooks::InstallHooks(getLogger());
     getLogger().info("Installed all hooks!");
 
-    QuestUI::Register::RegisterMainMenuModSettingsFlowCoordinator<TooManyTweaks::CoreFlowCoordinator*>(modInfo);
     QuestUI::Register::RegisterModSettingsFlowCoordinator<TooManyTweaks::CoreFlowCoordinator*>(modInfo);
+    QuestUI::Register::RegisterMainMenuModSettingsFlowCoordinator<TooManyTweaks::CoreFlowCoordinator*>(modInfo);
+
 }
