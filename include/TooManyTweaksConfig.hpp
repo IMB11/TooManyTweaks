@@ -21,5 +21,6 @@ DECLARE_CONFIG(TMTConfig,
                CONFIG_VALUE(disableBeatLines, bool, "Disable Beat Lines", false)
                CONFIG_VALUE(noHealthAndSafety, bool, "Disable Health Warning", true)
                CONFIG_VALUE(noComboBreakEffect, bool, "Disable Combo Break Effect", false)
+               CONFIG_VALUE(noPromo, bool, "Disable Main Menu Advertisement", true)
 )
 // clang-format on

@@ -254,6 +254,7 @@ namespace TooManyTweaks {
                          "Removes the annoying combo break effect that can distract some players.");
             AddHoverHint(AddConfigValueToggle(_uiTab->get_transform(), getTMTConfig().noHealthAndSafety),
                          "Removes the health and safety warnings at the start of the game.");
+            AddHoverHint(AddConfigValueToggle(_uiTab->get_transform(), getTMTConfig().noPromo), "Removes the promotional banner from the screen.");
 
             uiTab = AdjustedScrollContainerObject(_uiTab, false);
 #pragma endregion
