@@ -5,7 +5,7 @@
     "name": "TooManyTweaks",
     "id": "toomanytweaks",
     "version": "0.2.0",
-    "url": null,
+    "url": "https://mineblock11.dev/beat-saber/mod/tmt",
     "additionalData": {
       "overrideSoName": "libtoomanytweaks.so"
     }
@@ -13,7 +13,7 @@
   "dependencies": [
     {
       "id": "beatsaber-hook",
-      "versionRange": "^3.6.7",
+      "versionRange": "*",
       "additionalData": {
         "extraFiles": [
           "src/inline-hook"
@@ -27,22 +27,22 @@
     },
     {
       "id": "codegen",
-      "versionRange": "^0.22.0",
+      "versionRange": "^0.28.0",
       "additionalData": {}
     },
     {
       "id": "questui",
-      "versionRange": "^0.13.5",
+      "versionRange": "*",
       "additionalData": {}
     },
     {
       "id": "custom-types",
-      "versionRange": "^0.15.9",
+      "versionRange": "*",
       "additionalData": {}
     },
     {
       "id": "config-utils",
-      "versionRange": "^0.7.2",
+      "versionRange": "*",
       "additionalData": {}
     }
   ],

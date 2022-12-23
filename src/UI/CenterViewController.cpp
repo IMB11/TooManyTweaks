@@ -4,13 +4,70 @@
 #include "UnityEngine/GameObject.hpp"
 #include "questui/shared/CustomTypes/Components/ExternalComponents.hpp"
 
+#include "System/Action_2.hpp"
+
 #include "HMUI/ViewController.hpp"
 #include "HMUI/ViewController_AnimationType.hpp"
 #include "HMUI/ViewController_AnimationDirection.hpp"
+#include "HMUI/TextSegmentedControl.hpp"
+#include "HMUI/SegmentedControl.hpp"
+
+#define MakeADelegate(DelegateType, varName) (custom_types::MakeDelegate<DelegateType>(varName))
+
+#include "custom-types/shared/delegate.hpp"
 
 DEFINE_TYPE(TooManyTweaks, CenterViewController)
 
 static std::vector<QuestUI::SliderSetting *> ctabSliders;
+
+QuestUI::CustomTextSegmentedControlData* CreateTextSegmentedControlFIX(UnityEngine::Transform* parent, UnityEngine::Vector2 anchoredPosition, UnityEngine::Vector2 sizeDelta, ArrayW<StringW> values, std::function<void(int)> onCellWithIdxClicked)
+{
+    static SafePtrUnity<HMUI::TextSegmentedControl> segmentedControlTemplate;
+    if (!segmentedControlTemplate)
+        segmentedControlTemplate = UnityEngine::Resources::FindObjectsOfTypeAll<HMUI::TextSegmentedControl*>().FirstOrDefault([](auto x){
+            return x->get_name() == "TextSegmentedControl";
+        });
+
+    auto segmentedControlObj = UnityEngine::Object::Instantiate(segmentedControlTemplate->get_gameObject(), parent, false);
+    segmentedControlObj->SetActive(false);
+    static ConstString QuestUITextSegmentedControl("QuestUITextSegmentedControl");
+    segmentedControlObj->set_name(QuestUITextSegmentedControl);
+    auto rectTransform = reinterpret_cast<UnityEngine::RectTransform*>(segmentedControlObj->get_transform());
+    rectTransform->set_sizeDelta(sizeDelta);
+    rectTransform->set_anchoredPosition(anchoredPosition);
+
+
+    UnityEngine::Object::DestroyImmediate(segmentedControlObj->GetComponent<HMUI::TextSegmentedControl*>());
+    auto control = segmentedControlObj->AddComponent<HMUI::SegmentedControl*>();
+    auto result = segmentedControlObj->AddComponent<QuestUI::CustomTextSegmentedControlData*>();
+
+    result->firstCellPrefab = segmentedControlTemplate->firstCellPrefab;
+    result->lastCellPrefab = segmentedControlTemplate->lastCellPrefab;
+    result->middleCellPrefab = segmentedControlTemplate->middleCellPrefab;
+    result->singleCellPrefab = segmentedControlTemplate->singleCellPrefab;
+
+    result->segmentedControl = control;
+    control->dataSource = reinterpret_cast<HMUI::SegmentedControl::IDataSource*>(result);
+
+    if (onCellWithIdxClicked)
+    {
+        using DelegateType = System::Action_2<HMUI::SegmentedControl*, int>*;
+        std::function<void(HMUI::SegmentedControl*, int)> fun = [onCellWithIdxClicked](HMUI::SegmentedControl* cell, int idx){ onCellWithIdxClicked(idx); };
+        auto delegate = MakeADelegate(DelegateType, fun);
+        control->add_didSelectCellEvent(delegate);
+    }
+
+    int childCount = result->get_transform()->get_childCount();
+    for (int i = 0; i < childCount; i++)
+    {
+        UnityEngine::Object::DestroyImmediate(result->get_transform()->GetChild(0)->get_gameObject());
+    }
+
+    result->set_texts(values);
+
+    segmentedControlObj->SetActive(true);
+    return result;
+}
 
 namespace TooManyTweaks {
 
@@ -32,20 +89,32 @@ namespace TooManyTweaks {
         using namespace QuestUI::BeatSaberUI;
         using namespace UnityEngine;
 
+        l("activate")
+
         if (firstActivation) {
+            l("activfirst")
             static ArrayW<StringW> options(3);
+            l("createdArrayW")
 
             options[0] = "Controller";
+            l("createdArrayW0")
             options[1] = "Gameplay";
+            l("createdArrayW1")
             options[2] = "UI";
+            l("createdArrayW2")
 //            options[3] = "Miscellaneous";
 
-            CreateTextSegmentedControl(get_transform(), {75, 7}, options, [this](int PH1) {
+            CreateTextSegmentedControlFIX(this->get_transform(), {0, 0}, Vector2(75, 7), options, [this](int PH1) {
                 this->selectedTab = PH1;
                 SwitchGameplayTab(PH1);
             });
+            l("createdSegtab")
+
+            l("tabmade")
 
 #pragma region Controller Tab
+
+            l("ctrltab")
 
             auto _controllerTab = CreateScrollableSettingsContainer(get_transform());
 
@@ -107,6 +176,8 @@ namespace TooManyTweaks {
 
 #pragma region Gameplay Tab
 
+            l("gampltab")
+
             auto _gameplayTab = CreateScrollableSettingsContainer(get_transform());
 
             auto nText = CreateText(_gameplayTab->get_transform(), "Note Tweaks");
@@ -143,6 +214,7 @@ namespace TooManyTweaks {
                                                        [](float val) {
                                                            getTMTConfig().randomPitchMin.SetValue(val);
                                                        });
+
             AddHoverHint(randomPitchMinSlider, "The minimum pitch a hitsound can be.");
 
             auto randomPitchMaxSlider = CreateSliderSetting(_gameplayTab->get_transform(),
@@ -173,6 +245,8 @@ namespace TooManyTweaks {
 #pragma endregion
 
 #pragma region UI Tab
+
+            l("uitab")
 
             auto _uiTab = CreateScrollableSettingsContainer(get_transform());
 

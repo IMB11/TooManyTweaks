@@ -10,7 +10,7 @@ DECLARE_CLASS_CODEGEN(TooManyTweaks, ControllerTabRightViewController, HMUI::Vie
                                               il2cpp_utils::FindMethodUnsafe("HMUI", "ViewController", "DidActivate",
                                                                              3),
                                               bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling);
-                              DECLARE_INSTANCE_FIELD(TooManyTweaks::CenterViewController*, centerView);
+                              DECLARE_INSTANCE_FIELD(HMUI::ViewController*, centerView);
                               public:
                               void testRumble(Libraries::HM::HMLib::VR::HapticPresetSO* preset, GlobalNamespace::SaberType type);
 )

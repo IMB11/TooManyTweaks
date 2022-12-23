@@ -50,9 +50,9 @@ namespace TooManyTweaks {
 
             allButtons.push_back(
                     BeatSaberUI::CreateUIButton(cutRumbleButtons->get_transform(), "Left Cut Rumble Test", [this]() {
-                        normalPreset->dyn__duration() = std::min(0.2f, DURATION_NORMAL *
+                        normalPreset->duration = std::min(0.2f, DURATION_NORMAL *
                                                                        getTMTConfig().cutRumbleStrength.GetValue());
-                        normalPreset->dyn__strength() =
+                        normalPreset->strength =
                                 STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().cutRumbleStrength.GetValue() * 1.2f);
 
                         testRumble(normalPreset, SaberType::_get_SaberA());
@@ -60,9 +60,9 @@ namespace TooManyTweaks {
 
             allButtons.push_back(
                     BeatSaberUI::CreateUIButton(cutRumbleButtons->get_transform(), "Right Cut Rumble Test", [this]() {
-                        weakPreset->dyn__duration() = std::min(0.2f, DURATION_NORMAL *
+                        weakPreset->duration = std::min(0.2f, DURATION_NORMAL *
                                                                      getTMTConfig().cutRumbleStrength.GetValue());
-                        weakPreset->dyn__strength() =
+                        weakPreset->strength =
                                 STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().cutRumbleStrength.GetValue() * 1.2f);
 
                         testRumble(weakPreset, SaberType::_get_SaberB());
@@ -73,9 +73,9 @@ namespace TooManyTweaks {
             allButtons.push_back(
                     BeatSaberUI::CreateUIButton(chainRumbleButtons->get_transform(), "Left Chain Rumble Test",
                                                 [this]() {
-                                                    normalPreset->dyn__duration() = std::min(0.2f, DURATION_WEAK *
+                                                    normalPreset->duration = std::min(0.2f, DURATION_WEAK *
                                                                                                    getTMTConfig().chainRumbleStrength.GetValue());
-                                                    normalPreset->dyn__strength() = STRENGTH_WEAK * std::min(1.0f,
+                                                    normalPreset->strength = STRENGTH_WEAK * std::min(1.0f,
                                                                                                              getTMTConfig().chainRumbleStrength.GetValue() *
                                                                                                              1.2f);
 
@@ -85,9 +85,9 @@ namespace TooManyTweaks {
             allButtons.push_back(
                     BeatSaberUI::CreateUIButton(chainRumbleButtons->get_transform(), "Right Chain Rumble Test",
                                                 [this]() {
-                                                    weakPreset->dyn__duration() = std::min(0.2f, DURATION_WEAK *
+                                                    weakPreset->duration = std::min(0.2f, DURATION_WEAK *
                                                                                                  getTMTConfig().chainRumbleStrength.GetValue());
-                                                    weakPreset->dyn__strength() = STRENGTH_WEAK * std::min(1.0f,
+                                                    weakPreset->strength = STRENGTH_WEAK * std::min(1.0f,
                                                                                                            getTMTConfig().chainRumbleStrength.GetValue() *
                                                                                                            1.2f);
 
@@ -98,9 +98,9 @@ namespace TooManyTweaks {
 
             allButtons.push_back(
                     BeatSaberUI::CreateUIButton(arcRumbleButtons->get_transform(), "Left Arc Rumble Test", [this]() {
-                        normalPreset->dyn__duration() = std::min(0.2f, DURATION_WEAK *
+                        normalPreset->duration = std::min(0.2f, DURATION_WEAK *
                                                                        getTMTConfig().chainRumbleStrength.GetValue());
-                        normalPreset->dyn__strength() =
+                        normalPreset->strength =
                                 STRENGTH_WEAK * std::min(1.0f, getTMTConfig().chainRumbleStrength.GetValue() * 1.2f);
 
                         testRumble(normalPreset, SaberType::_get_SaberA());
@@ -108,16 +108,16 @@ namespace TooManyTweaks {
 
             allButtons.push_back(
                     BeatSaberUI::CreateUIButton(arcRumbleButtons->get_transform(), "Right Arc Rumble Test", [this]() {
-                        weakPreset->dyn__duration() = std::min(0.2f, DURATION_WEAK *
+                        weakPreset->duration = std::min(0.2f, DURATION_WEAK *
                                                                      getTMTConfig().chainRumbleStrength.GetValue());
-                        weakPreset->dyn__strength() =
+                        weakPreset->strength =
                                 STRENGTH_WEAK * std::min(1.0f, getTMTConfig().chainRumbleStrength.GetValue() * 1.2f);
 
                         testRumble(weakPreset, SaberType::_get_SaberB());
                     }));
 
-//            arcPreset->dyn__duration() = std::min(0.2f, ARC_DURATION_NORMAL * getTMTConfig().arcRumbleStrength.GetValue());
-//                arcPreset->dyn__strength() = ARC_STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().arcRumbleStrength.GetValue() * 1.2f);
+//            arcPreset->duration = std::min(0.2f, ARC_DURATION_NORMAL * getTMTConfig().arcRumbleStrength.GetValue());
+//                arcPreset->strength = ARC_STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().arcRumbleStrength.GetValue() * 1.2f);
 //
 //                testRumble(arcPreset);
         }

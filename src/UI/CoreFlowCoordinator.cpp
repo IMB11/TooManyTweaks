@@ -1,6 +1,4 @@
 #include "UI/CoreFlowCoordinator.hpp"
-#include "UI/SecondaryScreens/InformationLeftViewController.hpp"
-#include "UI/SecondaryScreens/ControllerTabRightViewController.hpp"
 
 #include "HMUI/ViewController.hpp"
 #include "HMUI/ViewController_AnimationType.hpp"
@@ -18,8 +16,8 @@ namespace TooManyTweaks {
         if (firstActivation) {
             l("CoreFlowCoord title")
             SetTitle("TooManyTweaks", ViewController::AnimationType::Out);
-            l("CoreFlowCoord backbtn")
-            showBackButton = true;
+
+            set_showBackButton(true);
 
             l("CoreFlowCoord makecenter")
             centerView = QuestUI::BeatSaberUI::CreateViewController<CenterViewController *>();
@@ -28,10 +26,10 @@ namespace TooManyTweaks {
             reinterpret_cast<TooManyTweaks::CenterViewController *>(centerView)->parentFlowCoordinator = this;
 
             l("CoreFlowCoord create infomation")
-            auto infoView = QuestUI::BeatSaberUI::CreateViewController<InformationLeftViewController *>();
+            infoView = QuestUI::BeatSaberUI::CreateViewController<InformationLeftViewController *>();
 
             l("CoreFlowCoord create controller")
-            auto controllerView = QuestUI::BeatSaberUI::CreateViewController<ControllerTabRightViewController *>();
+            controllerView = QuestUI::BeatSaberUI::CreateViewController<ControllerTabRightViewController *>();
 
             l("CoreFlowCoord provide")
             ProvideInitialViewControllers(centerView,

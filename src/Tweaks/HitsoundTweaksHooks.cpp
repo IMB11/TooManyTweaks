@@ -43,7 +43,7 @@ MAKE_HOOK_MATCH(NCSE_Init, &NoteCutSoundEffect::Init, void, NoteCutSoundEffect *
                 bool handleWrongSaberTypeAsGood, float volumeMultiplier, bool ignoreSaberSpeed, bool ignoreBadCuts) {
 
 
-    if (noteController->dyn__noteData()->get_gameplayType() == NoteData::GameplayType::_get_BurstSliderElement()) {
+    if (noteController->noteData->get_gameplayType() == NoteData::GameplayType::_get_BurstSliderElement()) {
 
         volumeMultiplier *= getTMTConfig().chainLinkVolMultiplier.GetValue();
 
@@ -62,60 +62,60 @@ MAKE_HOOK_MATCH(NCSE_Init, &NoteCutSoundEffect::Init, void, NoteCutSoundEffect *
     aheadTime = (hitsoundAlignOffset / randomPitch + sfxLatency) * randomPitch;
 
 
-    self->dyn__pitch() = randomPitch;
+    self->pitch = randomPitch;
 
-    self->dyn__ignoreSaberSpeed() = getTMTConfig().ignoreSaberSpeed.GetValue();
+    self->ignoreSaberSpeed = getTMTConfig().ignoreSaberSpeed.GetValue();
 
-    self->dyn__ignoreBadCuts() = getTMTConfig().ignoreBadCuts.GetValue();
+    self->ignoreBadCuts = getTMTConfig().ignoreBadCuts.GetValue();
 
-    self->dyn__beforeCutVolume() = 0.0f;
+    self->beforeCutVolume = 0.0f;
 
-    self->dyn__volumeMultiplier() = volumeMultiplier;
+    self->volumeMultiplier = volumeMultiplier;
 
     self->set_enabled(true);
 
-    self->dyn__audioSource()->set_clip(audioClip);
+    self->audioSource->set_clip(audioClip);
 
-    self->dyn__noteMissedTimeOffset() = missedTimeOffset;
+    self->noteMissedTimeOffset = missedTimeOffset;
 
-    self->dyn__aheadTime() = aheadTime;
+    self->aheadTime = aheadTime;
 
-    self->dyn__timeToNextNote() = timeToNextNote;
+    self->timeToNextNote = timeToNextNote;
 
-    self->dyn__timeToPrevNote() = timeToPrevNote;
+    self->timeToPrevNote = timeToPrevNote;
 
-    self->dyn__saber() = saber;
+    self->saber = saber;
 
-    self->dyn__noteController() = noteController;
+    self->noteController = noteController;
 
-    self->dyn__handleWrongSaberTypeAsGood() = handleWrongSaberTypeAsGood;
+    self->handleWrongSaberTypeAsGood = handleWrongSaberTypeAsGood;
 
-    self->dyn__noteWasCut() = false;
+    self->noteWasCut = false;
 
-    if (self->dyn__ignoreSaberSpeed()) {
+    if (self->ignoreSaberSpeed) {
 
-        self->dyn__beforeCutVolume() = self->dyn__goodCutVolume();
+        self->beforeCutVolume = self->goodCutVolume;
 
-        self->dyn__audioSource()->set_volume(self->dyn__goodCutVolume());
+        self->audioSource->set_volume(self->goodCutVolume);
 
     } else {
 
-        self->dyn__beforeCutVolume() = 0.0f;
+        self->beforeCutVolume = 0.0f;
 
-        self->dyn__audioSource()->set_volume(
-                self->dyn__speedToVolumeCurve()->Evaluate(self->dyn__saber()->get_bladeSpeed()));
+        self->audioSource->set_volume(
+                self->speedToVolumeCurve->Evaluate(self->saber->get_bladeSpeed()));
 
     }
 
-    self->dyn__audioSource()->set_pitch(self->dyn__pitch());
+    self->audioSource->set_pitch(self->pitch);
 
-    self->dyn__audioSource()->set_priority(128);
+    self->audioSource->set_priority(128);
 
-    self->get_transform()->set_position(self->dyn__saber()->get_saberBladeTopPos());
+    self->get_transform()->set_position(self->saber->get_saberBladeTopPos());
 
-    self->ComputeDSPTimes(noteDSPTime, self->dyn__aheadTime(), timeToPrevNote, timeToNextNote);
+    self->ComputeDSPTimes(noteDSPTime, self->aheadTime, timeToPrevNote, timeToNextNote);
 
-    self->dyn__audioSource()->PlayScheduled(self->dyn__startDSPTime());
+    self->audioSource->PlayScheduled(self->startDSPTime);
 
 
     self->get_transform()->set_position({0, 0, 0});
@@ -123,7 +123,7 @@ MAKE_HOOK_MATCH(NCSE_Init, &NoteCutSoundEffect::Init, void, NoteCutSoundEffect *
 
     if (!getTMTConfig().staticSoundPos.GetValue()) {
 
-        self->get_transform()->set_position(self->dyn__saber()->get_saberBladeTopPos());
+        self->get_transform()->set_position(self->saber->get_saberBladeTopPos());
 
     }
 
@@ -151,69 +151,69 @@ MAKE_HOOK_MATCH(NCSEM_HandleHit, &NoteCutSoundEffectManager::HandleNoteWasSpawne
 
 
     if ((noteData->get_colorType() == ColorType::ColorA &&
-         std::abs(noteData->get_time() - self->dyn__prevNoteATime()) < 0.001f) ||
+         std::abs(noteData->get_time() - self->prevNoteATime) < 0.001f) ||
         (noteData->get_colorType() == ColorType::ColorB &&
-         std::abs(noteData->get_time() - self->dyn__prevNoteBTime()) < 0.001f)) {
+         std::abs(noteData->get_time() - self->prevNoteBTime) < 0.001f)) {
 
         return;
 
     }
 
 
-    float timeScale = self->dyn__audioTimeSyncController()->dyn__timeScale();
+    float timeScale = self->audioTimeSyncController->timeScale;
 
-    auto noteCutSoundEffect = self->dyn__noteCutSoundEffectPoolContainer()->Spawn();
+    auto noteCutSoundEffect = self->noteCutSoundEffectPoolContainer->Spawn();
 
     noteCutSoundEffect->get_transform()->SetPositionAndRotation(self->get_transform()->get_localPosition(),
                                                                 Quaternion::get_identity());
 
-    noteCutSoundEffect->dyn__didFinishEvent()->Add(reinterpret_cast<INoteCutSoundEffectDidFinishEvent *>(self));
+    noteCutSoundEffect->didFinishEvent->Add(reinterpret_cast<INoteCutSoundEffectDidFinishEvent *>(self));
 
     Saber *saber = nullptr;
 
     if (noteData->get_colorType() == ColorType::ColorA) {
 
-        self->dyn__prevNoteATime() = noteData->get_time();
+        self->prevNoteATime = noteData->get_time();
 
-        saber = self->dyn__saberManager()->get_leftSaber();
+        saber = self->saberManager->get_leftSaber();
 
-        self->dyn__prevNoteASoundEffect() = noteCutSoundEffect;
+        self->prevNoteASoundEffect = noteCutSoundEffect;
 
     } else if (noteData->get_colorType() == ColorType::ColorB) {
 
-        self->dyn__prevNoteBTime() = noteData->get_time();
+        self->prevNoteBTime = noteData->get_time();
 
-        saber = self->dyn__saberManager()->get_rightSaber();
+        saber = self->saberManager->get_rightSaber();
 
-        self->dyn__prevNoteBSoundEffect() = noteCutSoundEffect;
+        self->prevNoteBSoundEffect = noteCutSoundEffect;
 
     }
 
     if(saber == nullptr) {
         getLogger().info("SABER IS NULLPTR AGAIN? USING RIGHT TO COMBAT.");
-        saber = self->dyn__saberManager()->dyn__rightSaber();
+        saber = self->saberManager->rightSaber;
         if(noteData->get_gameplayType() == NoteData::GameplayType::Bomb) {
             self->set_enabled(false);
             return;
         }
     }
 
-    bool flag2 = noteData->get_timeToPrevColorNote() < self->dyn__beatAlignOffset();
+    bool flag2 = noteData->get_timeToPrevColorNote() < self->beatAlignOffset;
 
-    AudioClip *audioClip = flag2 ? self->dyn__randomShortCutSoundPicker()->PickRandomObject()
-                                 : self->dyn__randomLongCutSoundPicker()->PickRandomObject();
+    AudioClip *audioClip = flag2 ? self->randomShortCutSoundPicker->PickRandomObject()
+                                 : self->randomLongCutSoundPicker->PickRandomObject();
 
     float num = 0.9f;
 
     noteCutSoundEffect->Init(audioClip, noteController, (double) (noteData->get_time() / timeScale) +
-                                                        self->dyn__audioTimeSyncController()->get_dspTimeOffset() +
-                                                        (double) self->dyn__audioTimeSyncController()->get_songTimeOffset(),
-                             self->dyn__beatAlignOffset(), 0.15f, noteData->get_timeToPrevColorNote() / timeScale,
+                                                        self->audioTimeSyncController->get_dspTimeOffset() +
+                                                        (double) self->audioTimeSyncController->get_songTimeOffset(),
+                             self->beatAlignOffset, 0.15f, noteData->get_timeToPrevColorNote() / timeScale,
                              noteData->get_timeToNextColorNote() / timeScale, saber,
                              self->get_handleWrongSaberTypeAsGood(), num * cutSfxVolumeMultiplier,
-                             self->dyn__useTestAudioClips(), self->dyn__initData()->dyn_ignoreBadCuts());
+                             self->useTestAudioClips, self->initData->ignoreBadCuts);
 
-    ListW<NoteCutSoundEffect *> activeItems = self->dyn__noteCutSoundEffectPoolContainer()->dyn__activeItems()->get_items();
+    ListW<NoteCutSoundEffect *> activeItems = self->noteCutSoundEffectPoolContainer->activeItems->get_items();
 
     NoteCutSoundEffect *noteCutSoundEffect2 = nullptr;
 
@@ -244,52 +244,52 @@ MAKE_HOOK_MATCH(NCSE_NoteWasCut, &NoteCutSoundEffect::NoteWasCut, void, NoteCutS
                 NoteController *noteController, ByRef<NoteCutInfo> noteCutInfo) {
 
 
-    if (self->dyn__noteController() != noteController) {
+    if (self->noteController != noteController) {
 
         return;
 
     }
 
 
-    self->dyn__noteWasCut() = true;
+    self->noteWasCut = true;
 
 
-    if (!self->dyn__ignoreBadCuts() && ((!self->dyn__handleWrongSaberTypeAsGood() && !noteCutInfo->get_allIsOK()) ||
-                                        self->dyn__handleWrongSaberTypeAsGood() &&
+    if (!self->ignoreBadCuts && ((!self->handleWrongSaberTypeAsGood && !noteCutInfo->get_allIsOK()) ||
+                                        self->handleWrongSaberTypeAsGood &&
                                         (!noteCutInfo->get_allExceptSaberTypeIsOK() || noteCutInfo->saberTypeOK))) {
 
-        self->dyn__audioSource()->set_priority(16);
+        self->audioSource->set_priority(16);
 
-        auto clip = self->dyn__badCutRandomSoundPicker()->PickRandomObject();
+        auto clip = self->badCutRandomSoundPicker->PickRandomObject();
 
-        self->dyn__audioSource()->set_clip(clip);
+        self->audioSource->set_clip(clip);
 
-        self->dyn__audioSource()->set_time(0.0f);
+        self->audioSource->set_time(0.0f);
 
-        self->dyn__audioSource()->Play();
+        self->audioSource->Play();
 
-        self->dyn__goodCut() = false;
+        self->goodCut = false;
 
-        self->dyn__audioSource()->set_volume(self->dyn__badCutVolume());
+        self->audioSource->set_volume(self->badCutVolume);
 
-        self->dyn__endDSPtime() = AudioSettings::get_dspTime() +
-                                  (self->dyn__audioSource()->get_clip()->get_length() / self->dyn__pitch()) +
+        self->endDSPtime = AudioSettings::get_dspTime() +
+                                  (self->audioSource->get_clip()->get_length() / self->pitch) +
                                   0.10000000149011612;
 
     } else {
 
-        self->dyn__audioSource()->set_priority(24);
+        self->audioSource->set_priority(24);
 
-        self->dyn__goodCut() = true;
+        self->goodCut = true;
 
-        self->dyn__audioSource()->set_volume(self->dyn__goodCutVolume());
+        self->audioSource->set_volume(self->goodCutVolume);
 
     }
 
 
-    if (!self->dyn__goodCut()) {
+    if (!self->goodCut) {
 
-        self->get_transform()->set_position(noteCutInfo->dyn_cutPoint());
+        self->get_transform()->set_position(noteCutInfo->cutPoint);
 
         return;
 
@@ -298,7 +298,7 @@ MAKE_HOOK_MATCH(NCSE_NoteWasCut, &NoteCutSoundEffect::NoteWasCut, void, NoteCutS
 
     if (getTMTConfig().enableSpatialization.GetValue()) {
 
-        self->get_transform()->set_position(noteCutInfo->dyn_cutPoint());
+        self->get_transform()->set_position(noteCutInfo->cutPoint);
 
     }
 
@@ -309,7 +309,7 @@ MAKE_HOOK_MATCH(NCSE_LateUpdate, &NoteCutSoundEffect::LateUpdate, void, NoteCutS
 
     double dspTime = AudioSettings::get_dspTime();
 
-    if (dspTime - self->dyn__endDSPtime() > 0.0) {
+    if (dspTime - self->endDSPtime > 0.0) {
 
         self->StopPlayingAndFinish();
 
@@ -317,53 +317,53 @@ MAKE_HOOK_MATCH(NCSE_LateUpdate, &NoteCutSoundEffect::LateUpdate, void, NoteCutS
 
     }
 
-    if (!self->dyn__noteWasCut()) {
+    if (!self->noteWasCut) {
 
-        if (dspTime > self->dyn__startDSPTime() + (double) self->dyn__aheadTime() - 0.05000000074505806) {
+        if (dspTime > self->startDSPTime + (double) self->aheadTime - 0.05000000074505806) {
 
-            self->dyn__audioSource()->set_priority(32);
+            self->audioSource->set_priority(32);
 
         }
 
-        float num = self->dyn__goodCutVolume();
+        float num = self->goodCutVolume;
 
-        if (!self->dyn__ignoreSaberSpeed()) {
+        if (!self->ignoreSaberSpeed) {
 
-            num *= self->dyn__speedToVolumeCurve()->Evaluate(self->dyn__saber()->get_bladeSpeed()) * (1.0f -
+            num *= self->speedToVolumeCurve->Evaluate(self->saber->get_bladeSpeed()) * (1.0f -
                                                                                                       Mathf::Clamp01(
-                                                                                                              (self->dyn__audioSource()->get_time() /
-                                                                                                               self->dyn__pitch() -
-                                                                                                               self->dyn__aheadTime()) /
-                                                                                                              self->dyn__noteMissedTimeOffset()));
+                                                                                                              (self->audioSource->get_time() /
+                                                                                                               self->pitch -
+                                                                                                               self->aheadTime) /
+                                                                                                              self->noteMissedTimeOffset));
 
         }
 
-        if (num < self->dyn__beforeCutVolume()) {
+        if (num < self->beforeCutVolume) {
 
-            self->dyn__beforeCutVolume() = std::lerp(self->dyn__beforeCutVolume(), num, Time::get_deltaTime() * 4.0f);
+            self->beforeCutVolume = std::lerp(self->beforeCutVolume, num, Time::get_deltaTime() * 4.0f);
 
         } else {
 
-            self->dyn__beforeCutVolume() = num;
+            self->beforeCutVolume = num;
 
         }
 
-        self->dyn__audioSource()->set_volume(self->dyn__beforeCutVolume() * self->dyn__volumeMultiplier());
+        self->audioSource->set_volume(self->beforeCutVolume * self->volumeMultiplier);
 
         return;
 
     }
 
-    if (self->dyn__goodCut()) {
+    if (self->goodCut) {
 
-        self->dyn__audioSource()->set_volume(self->dyn__goodCutVolume() * self->dyn__volumeMultiplier());
+        self->audioSource->set_volume(self->goodCutVolume * self->volumeMultiplier);
 
     }
 
 
-    if (!self->dyn__noteWasCut() && !getTMTConfig().staticSoundPos.GetValue()) {
+    if (!self->noteWasCut && !getTMTConfig().staticSoundPos.GetValue()) {
 
-//        self->get_transform()->set_position(self->dyn__saber()->get_saberBladeTopPos());
+//        self->get_transform()->set_position(self->saber()->get_saberBladeTopPos());
 
     }
 

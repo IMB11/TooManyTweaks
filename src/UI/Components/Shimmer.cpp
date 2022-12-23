@@ -5,13 +5,13 @@
 
 DEFINE_TYPE(TooManyTweaks, Shimmer);
 
-custom_types::Helpers::Coroutine TooManyTweaks::Shimmer::cycle(Color startColor, Color endColor, float cycleTime) {
+custom_types::Helpers::Coroutine TooManyTweaks::Shimmer::cycle(UnityEngine::Color startColor, UnityEngine::Color endColor, float cycleTime) {
     isCycling = true;
     float currentTime = 0;
     while (currentTime < cycleTime) {
-        currentTime += Time::get_deltaTime();
+        currentTime += UnityEngine::Time::get_deltaTime();
         float t = currentTime / cycleTime;
-        Color currentColor = Color::Lerp(startColor, endColor, t);
+        UnityEngine::Color currentColor = UnityEngine::Color::Lerp(startColor, endColor, t);
         text->set_color(currentColor);
         co_yield nullptr;
     }

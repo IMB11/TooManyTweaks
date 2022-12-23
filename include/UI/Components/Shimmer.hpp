@@ -16,6 +16,6 @@ DECLARE_CLASS_CODEGEN(TooManyTweaks, Shimmer, UnityEngine::MonoBehaviour,
                               DECLARE_INSTANCE_FIELD(TMPro::TextMeshProUGUI * , text);
 
                               public:
-                              custom_types::Helpers::Coroutine cycle(Color startColor, Color endColor, float cycleTime);
+                              custom_types::Helpers::Coroutine cycle(UnityEngine::Color startColor, UnityEngine::Color endColor, float cycleTime);
 )
 // clang-format on

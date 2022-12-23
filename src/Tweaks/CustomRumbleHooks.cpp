@@ -23,20 +23,20 @@ MAKE_HOOK_MATCH(CutRumbleHook, &NoteCutHapticEffect::HitNote, void, NoteCutHapti
         weakPreset = ScriptableObject::CreateInstance<HapticPresetSO *>();
     }
 
-    weakPreset->dyn__duration() = std::min(0.2f, DURATION_WEAK * getTMTConfig().chainRumbleStrength.GetValue());
-    weakPreset->dyn__strength() = STRENGTH_WEAK * std::min(1.0f, getTMTConfig().chainRumbleStrength.GetValue() * 1.2f);
+    weakPreset->duration = std::min(0.2f, DURATION_WEAK * getTMTConfig().chainRumbleStrength.GetValue());
+    weakPreset->strength = STRENGTH_WEAK * std::min(1.0f, getTMTConfig().chainRumbleStrength.GetValue() * 1.2f);
 
-    normalPreset->dyn__duration() = std::min(0.2f, DURATION_NORMAL * getTMTConfig().cutRumbleStrength.GetValue());
-    normalPreset->dyn__strength() = STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().cutRumbleStrength.GetValue() * 1.2f);
+    normalPreset->duration = std::min(0.2f, DURATION_NORMAL * getTMTConfig().cutRumbleStrength.GetValue());
+    normalPreset->strength = STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().cutRumbleStrength.GetValue() * 1.2f);
 
     if(type == NoteCutHapticEffect::Type::_get_ShortWeak()) {
-        if(weakPreset->dyn__duration() == 0 || weakPreset->dyn__strength() == 0) return;
+        if(weakPreset->duration == 0 || weakPreset->strength == 0) return;
 
-        self->dyn__hapticFeedbackController()->PlayHapticFeedback(SaberTypeExtensions::Node(saberType), weakPreset);
+        self->hapticFeedbackController->PlayHapticFeedback(SaberTypeExtensions::Node(saberType), weakPreset);
     } else {
-        if(normalPreset->dyn__duration() == 0 || normalPreset->dyn__strength() == 0) return;
+        if(normalPreset->duration == 0 || normalPreset->strength == 0) return;
 
-        self->dyn__hapticFeedbackController()->PlayHapticFeedback(SaberTypeExtensions::Node(saberType), normalPreset);
+        self->hapticFeedbackController->PlayHapticFeedback(SaberTypeExtensions::Node(saberType), normalPreset);
     }
 }
 
@@ -52,11 +52,11 @@ MAKE_HOOK_MATCH(ArcRumbleHook, &SliderHapticFeedbackInteractionEffect::Vibrate, 
         arcPreset = ScriptableObject::CreateInstance<HapticPresetSO*>();
     }
 
-    arcPreset->dyn__continuous() = true;
-    arcPreset->dyn__duration() = std::min(0.2f, ARC_DURATION_NORMAL * getTMTConfig().arcRumbleStrength.GetValue());
-    arcPreset->dyn__strength() = ARC_STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().arcRumbleStrength.GetValue() * 1.2f);
+    arcPreset->continuous = true;
+    arcPreset->duration = std::min(0.2f, ARC_DURATION_NORMAL * getTMTConfig().arcRumbleStrength.GetValue());
+    arcPreset->strength = ARC_STRENGTH_NORMAL * std::min(1.0f, getTMTConfig().arcRumbleStrength.GetValue() * 1.2f);
 
-    self->dyn__hapticPreset() = arcPreset;
+    self->hapticPreset = arcPreset;
 
     ArcRumbleHook(self);
 }

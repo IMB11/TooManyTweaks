@@ -1,14 +1,6 @@
 #include "TooManyTweaks.hpp"
 #include "UI/CoreFlowCoordinator.hpp"
 
-DEFINE_CONFIG(TMTConfig)
-
-Configuration& getConfig()  {
-    static Configuration config(modInfo);
-    config.Load();
-    return config;
-};
-
 Logger& getLogger()  {
     static Logger* logger = new Logger(modInfo);
     return *logger;
@@ -19,14 +11,14 @@ extern "C" void setup(ModInfo& info) {
     info.version = VERSION;
     modInfo = info;
 
-    getConfig().Load();
+    getTMTConfig().Init(modInfo);
     getLogger().info("Completed setup!");
 }
 
 extern "C" void load() {
     il2cpp_functions::Init();
 
-    getTMTConfig().Init(modInfo);
+    custom_types::Register::AutoRegister();
 
     getLogger().info("Installing hooks...");
     TooManyTweaks::Hooks::InstallHooks(getLogger());

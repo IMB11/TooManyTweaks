@@ -16,8 +16,6 @@
 
 static ModInfo modInfo;
 
-Configuration &getConfig();
-
 // Returns a logger, useful for printing debug messages
 Logger &getLogger();
 
