@@ -4,7 +4,7 @@
   "info": {
     "name": "TooManyTweaks",
     "id": "toomanytweaks",
-    "version": "0.3.0",
+    "version": "0.3.1",
     "url": "https://mineblock11.dev/beat-saber/mod/tmt",
     "additionalData": {
       "overrideSoName": "libtoomanytweaks.so"
@@ -27,7 +27,7 @@
     },
     {
       "id": "codegen",
-      "versionRange": "^0.28.0",
+      "versionRange": "^0.32.0",
       "additionalData": {}
     },
     {
@@ -45,6 +45,5 @@
       "versionRange": "*",
       "additionalData": {}
     }
-  ],
-  "additionalData": {}
+  ]
 }

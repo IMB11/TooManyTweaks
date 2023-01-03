@@ -19,6 +19,7 @@ DECLARE_CLASS_CODEGEN(TooManyTweaks, CenterViewController, HMUI::ViewController,
 //    DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, miscTab);
         public:
             std::vector<std::function<void(bool)>> onControllerTabRumbleStateChange;
+            std::vector<std::function<void(bool)>> onSoundTabStateChange;
             int selectedTab;
 )
 // clang-format on

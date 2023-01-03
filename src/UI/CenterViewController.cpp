@@ -196,6 +196,8 @@ namespace TooManyTweaks {
             sText->set_alignment(TMPro::TextAlignmentOptions::Center);
             AddHoverHint(sText->get_transform(), "Original PC Mod by GalaxyMaster");
 
+            AddConfigValueToggle(_gameplayTab->get_transform(), getTMTConfig().enableHitsoundTweaks);
+
             AddHoverHint(AddConfigValueToggle(_gameplayTab->get_transform(), getTMTConfig().ignoreSaberSpeed),
                          "Should the sound be influenced by the speed of the saber when slicing?");
 
