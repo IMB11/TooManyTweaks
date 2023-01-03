@@ -1,8 +1,8 @@
 name: NDK build
 
 env:
-    module_id: manytweaks
-    qmodName: ManyTweaks
+    module_id: toomanytweaks
+    qmodName: TooManyTweaks
 
 on:
   workflow_dispatch:
